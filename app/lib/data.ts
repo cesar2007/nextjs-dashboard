@@ -56,7 +56,7 @@ export async function fetchLatestInvoices() {
 
 export async function fetchProductsAvailable(){
 
-  const res = await fetch('http://localhost:8080/api/v1/products');
+  const res = await fetch('http://127.0.0.1:8080/api/v1/products');
 
   if (!res.ok){
     throw new Error('Failed to fetch data from products service')
