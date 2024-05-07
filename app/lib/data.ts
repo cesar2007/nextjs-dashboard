@@ -54,7 +54,6 @@ export async function fetchLatestInvoices() {
   }
 }
 
-
 export async function fetchCardData() {
   noStore();
   try {
