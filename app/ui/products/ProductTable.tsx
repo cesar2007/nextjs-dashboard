@@ -1,96 +1,148 @@
-'use client'
+import { fetchProducts } from "@/app/lib/data";
+import Image from 'next/image';
+import { DeleteInvoice, UpdateInvoice } from "../invoices/buttons";
+import { formatDateToLocal } from "@/app/lib/utils";
+import { flightRouterStateSchema } from "next/dist/server/app-render/types";
 
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useEffect, useState } from 'react';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
+export default async function ProductsTable({
+  query,
+  currentPage,
+}: {
+  query: string;
+  currentPage: number;
+}){
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
-
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-interface Product {
-  "id": number;
-  "name": string;
-  "updatedAt": string;
-  "imageUrl": string;
-}
-
-export function CustomizedTables() {
-
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    // Realizar la solicitud HTTP para obtener los datos
-    fetch('http://localhost:8080/api/v1/products')
-      .then(response => response.json())
-      .then(data => setProducts(data))
-      .catch(error => console.error('Error fetching products:', error));
-  }, []);
+  const products = await fetchProducts(query, currentPage);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Updated At</StyledTableCell>
-            <StyledTableCell>Image</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((product) => (
-            <StyledTableRow key={product.id}>
-              <StyledTableCell component="th" scope="row">
-                {product.id}
-              </StyledTableCell>
-              <StyledTableCell >{product.name}</StyledTableCell>
-              <StyledTableCell >{product.updatedAt}</StyledTableCell>
-              <StyledTableCell >{product.imageUrl}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+          <div className="md:hidden">
+
+          {/* {products?.map((product) => (
+              <div
+                key={product.id}
+                className="mb-2 w-full rounded-md bg-white p-4"
+              >
+                <div className="flex items-center justify-between border-b pb-4">
+                  <div>
+                    <div className="mb-2 flex items-center">
+                      <Image
+                        src={product.imageUrl}
+                        className="mr-2 rounded-full"
+                        width={28}
+                        height={28}
+                        alt={`${product.name}'s product picture`}
+                      />
+                      <p>{product.name}</p>
+                    </div>
+                    <p className="text-sm text-gray-500">{invoice.email}</p>
+                  </div>
+                  <InvoiceStatus status={invoice.status} />
+                </div>
+                <div className="flex w-full items-center justify-between pt-4">
+                  <div>
+                    <p className="text-xl font-medium">
+                      {formatCurrency(invoice.amount)}
+                    </p>
+                    <p>{formatDateToLocal(product.updatedAt)}</p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <UpdateInvoice id={product.id} />
+                    <DeleteInvoice id={product.id} />
+                  </div>
+                </div>
+              </div>
+            ))} */}
+
+
+          </div>
+
+          <table className="hidden min-w-full text-gray-900 md:table">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                  Product
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Updated at
+                </th>
+
+                <th scope="col" className="relative py-3 pl-6 pr-3">
+                  <span className="sr-only">Edit</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+              {products?.map((product) => (
+                <tr
+                  key={product.id}
+                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={product.imageUrl}
+                        className="rounded-full"
+                        width={28}
+                        height={28}
+                        alt={`${product.name}'s profile picture`}
+                      />
+                      <p>{product.name}</p>
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {formatDateToLocal(product.updatedAt) }
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-3">
+                      <UpdateInvoice id={product.id.toString()} />
+                      <DeleteInvoice id={product.id.toString()} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+
+        </div>
+      </div>
+    </div>
+  )
+
+
 }
+
+
+
+// filtrar por categoría
+
+// import { products as initialProducts } from json
+//  const [products] = useState(initialProducts);
+// const [filters, setFilters] = useState({
+  // category: 'all',
+  // minPrice: 0
+// })
+
+// const filterProducts = (products) => {
+//   return products.filter(product => {
+//     return (
+//       product.price >= filters.minPrice &&
+//        (
+            // flightRouterStateSchema.catefory === 'all' ||
+            // products.category === flightRouterStateSchema.category
+
+//        )
+//     )
+//   })
+// }
+
+// const filteredProducts = filterProducts(products)
+
+// return (
+//   <Products products={filterProducst(filteredProducts)} />
+// )
+// }

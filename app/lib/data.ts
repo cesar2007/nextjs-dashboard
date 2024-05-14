@@ -10,6 +10,8 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { products } from '../lib/placeholder-data';
+
 
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
@@ -55,7 +57,6 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
-  noStore();
   try {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -67,12 +68,12 @@ export async function fetchCardData() {
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`;
 
-
     const data = await Promise.all([
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
     ]);
+
     const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
     const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
@@ -235,4 +236,8 @@ export async function getUser(email: string) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
   }
+}
+
+export async function fetchProducts(query: string, currentPage: number){
+  return products;
 }

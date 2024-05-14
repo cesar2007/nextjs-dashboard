@@ -6,6 +6,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 import { fetchCardData } from '@/app/lib/data';
+import { products } from '../../lib/placeholder-data';
 
 const iconMap = {
   collected: BanknotesIcon,
@@ -22,11 +23,14 @@ export default async function CardWrapper() {
     totalPaidInvoices,
     totalPendingInvoices,
   } = await fetchCardData();
+  
+  const totalProducts = products.length;
+
 
   return (
     <>
       {/* NOTE: comment in this code when you get to this point in the course */}
-
+      <Card title="Total products" value={totalProducts} type="collected" />
       <Card title="Collected" value={totalPaidInvoices} type="collected" />
       <Card title="Pending" value={totalPendingInvoices} type="pending" />
       <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />

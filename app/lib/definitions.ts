@@ -23,6 +23,20 @@ export type Product = {
   image: string
 }
 
+
+export interface ProductInCatalog {
+  id:         number;
+  product:    Product;
+  catalog:    Catalog;
+  productUrl: string;
+  price:      number | null;
+}
+
+export interface Catalog {
+  id: number;
+}
+
+
 export type Invoice = {
   id: string;
   customer_id: string;
@@ -93,3 +107,5 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+
