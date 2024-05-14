@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Toaster } from "@/components/ui/sonner";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
